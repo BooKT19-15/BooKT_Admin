@@ -18,8 +18,10 @@ public class Menu implements Parcelable {
         this.menuItems = menuItems;
     }
 
+
     protected Menu(Parcel in) {
         menuCategory = in.readString();
+        menuItems = in.createTypedArrayList(MenuItem.CREATOR);
     }
 
     public static final Creator<Menu> CREATOR = new Creator<Menu>() {
@@ -58,5 +60,6 @@ public class Menu implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(menuCategory);
+        dest.writeTypedList(menuItems);
     }
 }

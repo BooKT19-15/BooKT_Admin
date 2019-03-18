@@ -1,6 +1,9 @@
 package com.bookt.bookt_admin;
 
-public class MenuItem {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MenuItem implements Parcelable {
     String description;
     String image;
     String name;
@@ -15,6 +18,25 @@ public class MenuItem {
         this.name = name;
         this.price = price;
     }
+
+    protected MenuItem(Parcel in) {
+        description = in.readString();
+        image = in.readString();
+        name = in.readString();
+        price = in.readString();
+    }
+
+    public static final Creator<MenuItem> CREATOR = new Creator<MenuItem>() {
+        @Override
+        public MenuItem createFromParcel(Parcel in) {
+            return new MenuItem(in);
+        }
+
+        @Override
+        public MenuItem[] newArray(int size) {
+            return new MenuItem[size];
+        }
+    };
 
     public String getDescription() {
         return description;
@@ -46,5 +68,18 @@ public class MenuItem {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(description);
+        dest.writeString(image);
+        dest.writeString(name);
+        dest.writeString(price);
     }
 }
