@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
 
 public class RestaurantDetailsActivity extends AppCompatActivity {
 
@@ -22,12 +22,16 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_details);
         Intent intent =getIntent();
+
+
         restaurant = intent.getParcelableExtra("Restaurant");
 
-        database = MainActivity.database;
-        myRef = MainActivity.myRef;
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("QueueList");
         TextView confirm = findViewById(R.id.confirm);
 
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
 
 
@@ -35,7 +39,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 myRef = myRef.getDatabase().getReference("Restaurants").child(restaurant.getFirebaseId());
-                myRef.setValue(restaurant);
+                myRef.setValueAsync(restaurant);
                 myRef = myRef.getDatabase().getReference("Country").
                         child("Saudi Arabia").
                         child("cities").
@@ -44,7 +48,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                         child("Cuisine_names").
                         child(restaurant.getRestaurant_cuisine());
                     Type type = new Type(restaurant.getRestaurant_cuisine());
-                    myRef.setValue(type);
+                    myRef.setValueAsync(type);
                 myRef = myRef.getDatabase().getReference("Country").
                         child("Saudi Arabia").
                         child("cities").
@@ -53,7 +57,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                         child("ids").
                         child(restaurant.getRestaurant_cuisine()).
                         child(restaurant.getFirebaseId());
-                myRef.setValue(restaurant);
+                myRef.setValueAsync(restaurant);
             }
         });
 
