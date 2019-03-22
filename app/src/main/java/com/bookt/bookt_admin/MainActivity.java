@@ -9,16 +9,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    static FirebaseDatabase database ;
-    static DatabaseReference myRef ;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -51,13 +55,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        InputStream is =
+                null;
+        FirebaseOptions options =
+                null;
+        try {
+            is= getClass().getResourceAsStream("/assets/firebase_con.json");
+
+            options  = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(is))
+                    .setDatabaseUrl("https://bookt-a9889.firebaseio.com")
+                    .build();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        FirebaseApp.initializeApp(options);
+
+
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
-
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("QueueList");
 
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -66,5 +89,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
 
 }

@@ -24,8 +24,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         Intent intent =getIntent();
         restaurant = intent.getParcelableExtra("Restaurant");
 
-        database = MainActivity.database;
-        myRef = MainActivity.myRef;
+
         TextView confirm = findViewById(R.id.confirm);
 
 
@@ -34,8 +33,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myRef = myRef.getDatabase().getReference("Restaurants").child(restaurant.getFirebaseId());
-                myRef.setValue(restaurant);
+                myRef = FirebaseDatabase.getInstance().getReference("Restaurants").child(restaurant.getFirebaseId());
+                myRef.setValueAsync(restaurant);
                 myRef = myRef.getDatabase().getReference("Country").
                         child("Saudi Arabia").
                         child("cities").
@@ -44,8 +43,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                         child("Cuisine_names").
                         child(restaurant.getRestaurant_cuisine());
                     Type type = new Type(restaurant.getRestaurant_cuisine());
-                    myRef.setValue(type);
-                myRef = myRef.getDatabase().getReference("Country").
+                    myRef.setValueAsync(type);
+                myRef = FirebaseDatabase.getInstance().getReference("Country").
                         child("Saudi Arabia").
                         child("cities").
                         child(restaurant.getRestaurant_city()).
@@ -53,7 +52,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                         child("ids").
                         child(restaurant.getRestaurant_cuisine()).
                         child(restaurant.getFirebaseId());
-                myRef.setValue(restaurant);
+                myRef.setValueAsync(restaurant);
             }
         });
 

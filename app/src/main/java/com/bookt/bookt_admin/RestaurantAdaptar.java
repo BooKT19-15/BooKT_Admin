@@ -21,6 +21,11 @@ public class RestaurantAdaptar extends RecyclerView.Adapter<RestaurantAdaptar.My
         this.restaurantArrayList = restaurantArrayList;
     }
 
+    void onNewDataArrived(ArrayList<Restaurant> restaurantArrayList) {
+        this.restaurantArrayList = restaurantArrayList;
+        this.notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

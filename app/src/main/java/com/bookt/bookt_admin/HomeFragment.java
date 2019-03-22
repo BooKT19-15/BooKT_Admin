@@ -3,6 +3,7 @@ package com.bookt.bookt_admin;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,8 @@ public class HomeFragment extends Fragment {
     RecyclerView recyclerView;
     RestaurantAdaptar restaurantAdaptar;
 
+    View view;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -48,11 +52,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
 
-        database = MainActivity.database;
-        myRef = MainActivity.myRef;
         array_size = view.findViewById(R.id.array_size);
         restaurantArrayList = new ArrayList<>();
 
@@ -61,28 +63,43 @@ public class HomeFragment extends Fragment {
         restaurantAdaptar = new RestaurantAdaptar(getContext(),restaurantArrayList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(restaurantAdaptar);
+        restaurantAdaptar.notifyDataSetChanged();
 
-        myRef.getDatabase().getReference("QueueList");
-        myRef.addValueEventListener(new ValueEventListener() {
+
+
+
+        FirebaseDatabase.getInstance().getReference("QueueList").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                array_size.setText(dataSnapshot.getChildrenCount()+"");
-                for(DataSnapshot dataSnapshot1 :dataSnapshot.getChildren()){
+            public void onDataChange(DataSnapshot snapshot) {
+                array_size.setText(snapshot.getChildrenCount()+"");
+                for(DataSnapshot dataSnapshot1 :snapshot.getChildren()){
                     Restaurant restaurant = dataSnapshot1.getValue(Restaurant.class);
                     restaurant.setFirebaseId(dataSnapshot1.getKey());
                     restaurantArrayList.add(restaurant);
-                    restaurantAdaptar.notifyDataSetChanged();
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            restaurantAdaptar.notifyDataSetChanged();
+                        }
+                    });
                 }
+
+
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError error) {
 
             }
         });
 
 
+
+
+
         return  view;
     }
+
+
 
 }
