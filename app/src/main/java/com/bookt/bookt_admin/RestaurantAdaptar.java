@@ -43,6 +43,7 @@ public class RestaurantAdaptar extends RecyclerView.Adapter<RestaurantAdaptar.My
         myViewHolder.cName.setText(new StringBuilder().append(restaurantArrayList.get(i).getPerson().getFirst_name()).append(" ").append(restaurantArrayList.get(i).getPerson().getLast_name()).toString());
         myViewHolder.cEmail.setText(restaurantArrayList.get(i).getPerson().getEmail());
         myViewHolder.cPhone.setText(restaurantArrayList.get(i).getPerson().getMobile_number());
+        myViewHolder.cuisine_name.setText(restaurantArrayList.get(i).getRestaurant_cuisine());
 
         myViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +70,7 @@ public class RestaurantAdaptar extends RecyclerView.Adapter<RestaurantAdaptar.My
         TextView cName;
         TextView cEmail;
         TextView cPhone;
+        TextView cuisine_name;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +80,7 @@ public class RestaurantAdaptar extends RecyclerView.Adapter<RestaurantAdaptar.My
             cName = itemView.findViewById(R.id.c_name);
             cEmail = itemView.findViewById(R.id.c_email);
             cPhone = itemView.findViewById(R.id.c_phone);
+            cuisine_name = itemView.findViewById(R.id.cuisine_name);
 
         }
     }

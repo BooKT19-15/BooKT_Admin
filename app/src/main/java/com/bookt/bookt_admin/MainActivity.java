@@ -23,6 +23,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 
+    HomeFragment homeFragment;
+
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -33,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    selectedFragment = HomeFragment.newInstance();
+                    if(homeFragment == null){
+                        homeFragment = new HomeFragment();
+                    }
+                    selectedFragment = homeFragment;
                     break;
                 case R.id.navigation_dashboard:
                     selectedFragment = HomeFragment.newInstance();
